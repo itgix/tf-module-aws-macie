@@ -1,15 +1,15 @@
 resource "aws_macie2_custom_data_identifier" "default" {
-  for_each = local.custom_data_identifiers
+  count = var.enable_custom_data_identifier ? 1 : 0
 
-  name                   = module.custom_data_identifier_label[each.key].id
-  description            = lookup(each.value, "description", "Managed by Terraform")
-  regex                  = lookup(each.value, "regex", null)
-  keywords               = lookup(each.value, "keywords", null)
-  ignore_words           = lookup(each.value, "ignore_words", null)
-  maximum_match_distance = lookup(each.value, "maximum_match_distance", null)
-  tags                   = module.custom_data_identifier_label[each.key].tags
+  name                   = var.custom_data_identifier_name
+  description            = var.custom_data_identifier_description
+  regex                  = var.custom_data_identifier_regex
+  keywords               = var.custom_data_identifier_keywords
+  ignore_words           = var.custom_data_identifier_ignore_words
+  maximum_match_distance = var.custom_data_identifier_maximum_match_distance
 
+  # TODO: do we need this ? 
   depends_on = [
-    aws_macie2_account.default
+    aws_macie2_account.security_acc
   ]
 }
