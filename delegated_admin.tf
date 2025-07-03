@@ -1,4 +1,4 @@
-resource "aws_macie2_organization_admin_account" "security_acc" {
+resource "aws_macie2_organization_admin_account" "delegate_admin_sec_acc" {
   count            = var.macie_organization_management_account ? 1 : 0
   admin_account_id = var.organization_security_account_id
   # TODO: do we need those ?
