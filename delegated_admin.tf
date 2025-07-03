@@ -6,6 +6,7 @@ resource "aws_macie2_organization_admin_account" "security_acc" {
 }
 
 resource "aws_macie2_account" "security_acc" {
+  count                        = var.macie_organization_security_account ? 1 : 0
   finding_publishing_frequency = "FIFTEEN_MINUTES"
   status                       = "ENABLED"
 }
