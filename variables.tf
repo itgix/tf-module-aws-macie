@@ -83,3 +83,42 @@ variable "custom_data_identifier_maximum_match_distance" {
   default     = 10
   description = "The maximum number of characters that can exist between text that matches the regex pattern and the character sequences specified by the keywords array. Macie includes or excludes a result based on the proximity of a keyword to text that matches the regex pattern. The distance can be 1 - 300 characters. The default value is 50."
 }
+
+# classification job
+variable "one_time_classification_job" {
+  type        = bool
+  default     = false
+  description = "Wether to enable or disable the creation of classification jobs"
+}
+
+variable "classification_job_type" {
+  type        = string
+  default     = "ONE_TIME"
+  description = "Valid values are: ONE_TIME - Run the job only once. If you specify this value, don't specify a value for the schedule_frequency property. SCHEDULED - Run the job on a daily, weekly, or monthly basis. If you specify this value, use the schedule_frequency property to define the recurrence pattern for the job."
+}
+
+variable "daily_classification_job_description" {
+  type = string
+  default = "Weekly classification job for S3 data"
+  description = "Description for the daily classification job"
+}
+
+variable "classification_job_schedule_frequency" {
+  type =
+  default = 
+  description = "he recurrence pattern for running the job. To run the job only once, don't specify a value for this property and set the value for the job_type property to ONE_TIME"
+}
+
+variable "scheduled_jobs" {
+  description = "List of Macie scheduled job configurations"
+  type = list(object({
+    job_name      = string
+    description   = string
+    job_type      = string         # ONE_TIME or SCHEDULED
+    schedule_type = string         # DAILY, WEEKLY, MONTHLY (used only if job_type == SCHEDULED)
+    bucket_names  = list(string)
+    initial_run   = bool
+    day_of_week   = optional(string)  # Only for WEEKLY
+    day_of_month  = optional(number)  # Only for MONTHLY
+  }))
+}
