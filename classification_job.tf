@@ -52,7 +52,7 @@ resource "aws_macie2_classification_job" "daily" {
   }
 
   schedule_frequency {
-    daily_schedule = {}
+    daily_schedule = true
   }
 
   initial_run = local.daily_jobs[count.index].initial_run
@@ -72,9 +72,7 @@ resource "aws_macie2_classification_job" "weekly" {
   }
 
   schedule_frequency {
-    weekly_schedule = {
-      day_of_week = local.weekly_jobs[count.index].day_of_week
-    }
+    weekly_schedule = local.weekly_jobs[count.index].day_of_week
   }
 
   initial_run = local.weekly_jobs[count.index].initial_run
