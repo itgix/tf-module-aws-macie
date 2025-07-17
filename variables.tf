@@ -23,11 +23,11 @@ variable "organization_member_account_ids" {
   default     = []
 }
 
-# variable "macie_notification_mail" {
-#   type        = string
-#   default     = "aws-landing-zones@itgix.com"
-#   description = "(Optional) e-mail address that can be provided to receive updates about security issues"
-# }
+variable "macie_notification_mail" {
+  type        = string
+  default     = "aws-landing-zones@itgix.com"
+  description = "(Optional) e-mail address that can be provided to receive updates about security issues"
+}
 
 variable "invite_member_account" {
   type        = bool
