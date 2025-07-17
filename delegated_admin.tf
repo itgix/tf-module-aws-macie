@@ -10,4 +10,12 @@ resource "aws_macie2_member" "members" {
   invite                                = var.invite_member_account # this is optional
   invitation_message                    = "aws macie invitation from itgix landing zones admin"
   invitation_disable_email_notification = var.disable_email_notification
+
+  // bug in this resources always tries to recreate this resouces because of a change in email altough it has not changed
+  lifecycle {
+    ignore_changes = [
+      email,
+      invite
+    ]
+  }
 }
