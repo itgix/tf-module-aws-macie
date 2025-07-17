@@ -35,11 +35,11 @@ variable "invite_member_account" {
   description = "(Optional) Boolean whether to invite the account to  as a member. Defaults to false."
 }
 
-variable "disable_email_notification" {
-  type        = bool
-  default     = true
-  description = "(Optional) Boolean whether an email notification is sent to the accounts when new member accounts are registered. Defaults to false"
-}
+# variable "disable_email_notification" {
+#   type        = bool
+#   default     = true
+#   description = "(Optional) Boolean whether an email notification is sent to the accounts when new member accounts are registered. Defaults to false"
+# }
 
 # custom data identifier
 variable "enable_custom_data_identifier" {
