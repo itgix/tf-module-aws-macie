@@ -1,63 +1,103 @@
-# One-Time Job
-resource "aws_macie2_classification_job" "one_time_job" {
-  count = (
-    var.one_time_jobs != null && length(var.one_time_jobs) > 0 ? length(var.one_time_jobs) : 0
-  )
-  name        = "macie-one-time-job"
-  job_type    = "ONE_TIME"
-  description = "One-time Macie classification job"
+locals {
+  daily_jobs = [
+    for job in var.macie_jobs : job
+    if job.job_type == "SCHEDULED" && job.schedule_type == "DAILY"
+  ]
 
-  s3_job_definition {
-    bucket_definitions {
-      account_id = data.aws_caller_identity.current.account_id
-      buckets    = var.one_time_jobs[count.index].bucket_names
-    }
-  }
+  weekly_jobs = [
+    for job in var.macie_jobs : job
+    if job.job_type == "SCHEDULED" && job.schedule_type == "WEEKLY"
+  ]
 
-  initial_run                      = true
-  managed_data_identifier_selector = "ALL"
+  monthly_jobs = [
+    for job in var.macie_jobs : job
+    if job.job_type == "SCHEDULED" && job.schedule_type == "MONTHLY"
+  ]
+
+  one_time_jobs = [
+    for job in var.macie_jobs : job
+    if job.job_type == "ONE_TIME"
+  ]
 }
 
-# Schedule Job
-resource "aws_macie2_classification_job" "scheduled_job" {
-  count = (
-    var.scheduled_jobs != null && length(var.scheduled_jobs) > 0 ? length(var.scheduled_jobs) : 0
-  )
-  name        = var.scheduled_jobs[count.index].job_name
-  description = var.scheduled_jobs[count.index].description
-  job_type    = var.scheduled_jobs[count.index].job_type
+# One-Time Job
+resource "aws_macie2_classification_job" "one_time" {
+  count       = length(local.one_time_jobs)
+  name        = local.one_time_jobs[count.index].job_name
+  description = local.one_time_jobs[count.index].description
+  job_type    = "ONE_TIME"
 
   s3_job_definition {
     bucket_definitions {
       account_id = data.aws_caller_identity.current.account_id
-      buckets    = var.scheduled_jobs[count.index].bucket_names
+      buckets    = local.one_time_jobs[count.index].bucket_names
     }
   }
 
-  dynamic "schedule_frequency" {
-    for_each = var.scheduled_jobs[count.index].job_type == "SCHEDULED" ? [1] : []
-    content {
-      dynamic "daily_schedule" {
-        for_each = var.scheduled_jobs[count.index].schedule_type == "DAILY" ? [1] : []
-        content {}
-      }
+  initial_run = local.one_time_jobs[count.index].initial_run
+}
 
-      dynamic "weekly_schedule" {
-        for_each = var.scheduled_jobs[count.index].schedule_type == "WEEKLY" ? [1] : []
-        content {
-          day_of_week = var.scheduled_jobs[count.index].day_of_week
-        }
-      }
+# Scheduled Jobs
+resource "aws_macie2_classification_job" "daily" {
+  count       = length(local.daily_jobs)
+  name        = local.daily_jobs[count.index].job_name
+  description = local.daily_jobs[count.index].description
+  job_type    = "SCHEDULED"
 
-      dynamic "monthly_schedule" {
-        for_each = var.scheduled_jobs[count.index].schedule_type == "MONTHLY" ? [1] : []
-        content {
-          day_of_month = var.scheduled_jobs[count.index].day_of_month
-        }
-      }
+  s3_job_definition {
+    bucket_definitions {
+      account_id = data.aws_caller_identity.current.account_id
+      buckets    = local.daily_jobs[count.index].bucket_names
     }
   }
 
-  initial_run                      = var.scheduled_jobs[count.index].initial_run
-  managed_data_identifier_selector = "ALL"
+  schedule_frequency {
+    daily_schedule = {}
+  }
+
+  initial_run = local.daily_jobs[count.index].initial_run
+}
+
+resource "aws_macie2_classification_job" "weekly" {
+  count       = length(local.weekly_jobs)
+  name        = local.weekly_jobs[count.index].job_name
+  description = local.weekly_jobs[count.index].description
+  job_type    = "SCHEDULED"
+
+  s3_job_definition {
+    bucket_definitions {
+      account_id = data.aws_caller_identity.current.account_id
+      buckets    = local.weekly_jobs[count.index].bucket_names
+    }
+  }
+
+  schedule_frequency {
+    weekly_schedule = {
+      day_of_week = local.weekly_jobs[count.index].day_of_week
+    }
+  }
+
+  initial_run = local.weekly_jobs[count.index].initial_run
+}
+
+resource "aws_macie2_classification_job" "monthly" {
+  count       = length(local.monthly_jobs)
+  name        = local.monthly_jobs[count.index].job_name
+  description = local.monthly_jobs[count.index].description
+  job_type    = "SCHEDULED"
+
+  s3_job_definition {
+    bucket_definitions {
+      account_id = data.aws_caller_identity.current.account_id
+      buckets    = local.monthly_jobs[count.index].bucket_names
+    }
+  }
+
+  schedule_frequency {
+    monthly_schedule = {
+      day_of_month = local.monthly_jobs[count.index].day_of_month
+    }
+  }
+
+  initial_run = local.monthly_jobs[count.index].initial_run
 }

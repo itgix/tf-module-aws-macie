@@ -85,40 +85,17 @@ variable "custom_data_identifier_maximum_match_distance" {
 }
 
 # classification job
-variable "one_time_classification_job" {
-  type        = bool
-  default     = false
-  description = "Wether to enable or disable the creation of classification jobs"
-}
-
-variable "classification_job_type" {
-  type        = string
-  default     = "ONE_TIME"
-  description = "Valid values are: ONE_TIME - Run the job only once. If you specify this value, don't specify a value for the schedule_frequency property. SCHEDULED - Run the job on a daily, weekly, or monthly basis. If you specify this value, use the schedule_frequency property to define the recurrence pattern for the job."
-}
-
-variable "daily_classification_job_description" {
-  type = string
-  default = "Weekly classification job for S3 data"
-  description = "Description for the daily classification job"
-}
-
-variable "classification_job_schedule_frequency" {
-  type =
-  default = 
-  description = "he recurrence pattern for running the job. To run the job only once, don't specify a value for this property and set the value for the job_type property to ONE_TIME"
-}
-
-variable "scheduled_jobs" {
-  description = "List of Macie scheduled job configurations"
+variable "macie_jobs" {
+  description = "List of Macie classification jobs to create"
   type = list(object({
     job_name      = string
     description   = string
-    job_type      = string         # ONE_TIME or SCHEDULED
-    schedule_type = string         # DAILY, WEEKLY, MONTHLY (used only if job_type == SCHEDULED)
+    job_type      = string           # "SCHEDULED" or "ONE_TIME"
+    schedule_type = optional(string) # "DAILY", "WEEKLY", "MONTHLY"
     bucket_names  = list(string)
     initial_run   = bool
-    day_of_week   = optional(string)  # Only for WEEKLY
-    day_of_month  = optional(number)  # Only for MONTHLY
+    day_of_week   = optional(string) # for WEEKLY
+    day_of_month  = optional(number) # for MONTHLY
   }))
+  default = []
 }
