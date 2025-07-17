@@ -29,7 +29,7 @@ resource "aws_macie2_classification_job" "one_time" {
 
   s3_job_definition {
     bucket_definitions {
-      account_id = data.aws_caller_identity.current.account_id
+      account_id = var.organization_security_account_id
       buckets    = local.one_time_jobs[count.index].bucket_names
     }
   }
@@ -46,7 +46,7 @@ resource "aws_macie2_classification_job" "daily" {
 
   s3_job_definition {
     bucket_definitions {
-      account_id = data.aws_caller_identity.current.account_id
+      account_id = var.organization_security_account_id
       buckets    = local.daily_jobs[count.index].bucket_names
     }
   }
@@ -66,7 +66,7 @@ resource "aws_macie2_classification_job" "weekly" {
 
   s3_job_definition {
     bucket_definitions {
-      account_id = data.aws_caller_identity.current.account_id
+      account_id = var.organization_security_account_id
       buckets    = local.weekly_jobs[count.index].bucket_names
     }
   }
@@ -88,7 +88,7 @@ resource "aws_macie2_classification_job" "monthly" {
 
   s3_job_definition {
     bucket_definitions {
-      account_id = data.aws_caller_identity.current.account_id
+      account_id = var.organization_security_account_id
       buckets    = local.monthly_jobs[count.index].bucket_names
     }
   }
