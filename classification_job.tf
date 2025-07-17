@@ -92,9 +92,7 @@ resource "aws_macie2_classification_job" "monthly" {
   }
 
   schedule_frequency {
-    monthly_schedule = {
-      day_of_month = local.monthly_jobs[count.index].day_of_month
-    }
+    monthly_schedule = local.monthly_jobs[count.index].day_of_month
   }
 
   initial_run = local.monthly_jobs[count.index].initial_run
