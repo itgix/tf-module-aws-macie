@@ -25,7 +25,7 @@ variable "organization_member_account_ids" {
 
 variable "macie_notification_mail" {
   type        = string
-  default     = "aws-landing-zones@itgix.com"
+  default     = ""
   description = "(Optional) e-mail address that can be provided to receive updates about security issues"
 }
 
