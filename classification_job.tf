@@ -1,21 +1,21 @@
 locals {
   daily_jobs = [
-    for job in var.macie_jobs : job
+    for job in var.macie_classification_jobs : job
     if job.job_type == "SCHEDULED" && job.schedule_type == "DAILY"
   ]
 
   weekly_jobs = [
-    for job in var.macie_jobs : job
+    for job in var.macie_classification_jobs : job
     if job.job_type == "SCHEDULED" && job.schedule_type == "WEEKLY"
   ]
 
   monthly_jobs = [
-    for job in var.macie_jobs : job
+    for job in var.macie_classification_jobs : job
     if job.job_type == "SCHEDULED" && job.schedule_type == "MONTHLY"
   ]
 
   one_time_jobs = [
-    for job in var.macie_jobs : job
+    for job in var.macie_classification_jobs : job
     if job.job_type == "ONE_TIME"
   ]
 }

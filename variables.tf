@@ -45,7 +45,7 @@ variable "disable_email_notification" {
 variable "enable_custom_data_identifier" {
   type        = bool
   default     = false
-  description = "Wether to enable the use of custom data identifiers"
+  description = "Wether to enable the use of a custom data identifier in AWS Macie"
 }
 
 variable "custom_data_identifier_name" {
@@ -85,7 +85,7 @@ variable "custom_data_identifier_maximum_match_distance" {
 }
 
 # classification job
-variable "macie_jobs" {
+variable "macie_classification_jobs" {
   description = "List of Macie classification jobs to create"
   type = list(object({
     job_name      = string
