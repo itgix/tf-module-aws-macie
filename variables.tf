@@ -1,10 +1,4 @@
 # organization configs
-variable "macie_organization_management_account" {
-  type        = bool
-  default     = false
-  description = "Set to true when running from organization management account to configure the macie delegated admin"
-}
-
 variable "organization_security_account_id" {
   type        = string
   description = "AWS Account ID where Macie is deployed - security account"
