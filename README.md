@@ -66,7 +66,6 @@ module "aws_macie_sec_acc" {
   ]
 }
 ```
-```
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
